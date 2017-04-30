@@ -267,6 +267,14 @@ http://saw.galois.com/
 
 [GitHub llvm-verifier](https://github.com/GaloisInc/llvm-verifier)
 
+### Strong Update Analysis (SUPA) (UNSW)
+> demand-driven Strong UPdate Analysis that computes points-to information on-demand via value-flow refinement. 
+> built on SVF (below)
+
+http://www.cse.unsw.edu.au/~corg/supa/
+
+[GitHub](https://github.com/unsw-corg/PTABen)
+
 ### Static Value Flow (SVF) (UNSW)
 > Pointer Analysis and Program Dependence Analysis for C and C++ Programs
 
