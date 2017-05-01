@@ -303,6 +303,12 @@ http://www.cis.upenn.edu/~stevez/vellvm/
 
 https://deepspec.org/main
 
+### Verified ThreadSanitizer (TSan) 
+> Output research from VeLLVM / deepspec group on verifying TSan does what it says it will
+
+[GitHub](https://github.com/upenn-acg/verified-tsan)
+
+
 ### Whole program LLVM
 > Help linking multiple .bc files to one
 
