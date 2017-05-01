@@ -73,6 +73,13 @@ https://divine.fi.muni.cz
 
 [Thesis](https://is.muni.cz/th/373979/fi_m/thesis.pdf)
 
+
+### DomTreSat
+> static analysis system that takes source code as input and automatically produces path satisfiability reports for paths gathered from a created Dominator Tree structure...main use of this tool is determine reachability of controllable input to a target in the program, as well as what this input needs to be to get there
+
+[GitHub](https://github.com/trailofbits/DomTreSat)
+
+
 ### DynamicTools
 > This project consists of several useful tool for dealing with LLVM
 > IR runtime behaviors. Currently it consists of two parts,
@@ -205,6 +212,14 @@ Basically, it attempts to reorganize GetElementPtr's to best handle alpha partic
 
 ### Pointer analysis with tunable precision (TPA)
 [GitHub](https://github.com/grievejia/tpa)
+
+
+### RaceSan (ToB)
+> Data race detector using modified DataCollider algorithm. 
+
+WIP? 
+
+[GitHub](https://github.com/trailofbits/RaceSanitizer)
 
 ### Remill (ToB)
 > Lift MC instructions to IR
