@@ -19,6 +19,19 @@ Note the code in lib/Transform/Instrumentation.
 
 [``AddressSanitizer: A Fast Address Sanity Checker''](https://static.googleusercontent.com/media/research.google.com/en//pubs/archive/37752.pdf) 
 
+
+### Alive
+> Verifying the InstCombiner code; Regehr et al
+
+[GitHub](https://github.com/nunoplopes/alive)
+
+
+### Alive-nj
+> Reimplementation of the Alive code
+
+[GitHub](https://github.com/rutgers-apl/alive-nj)
+
+
 ### American Fuzzy Lop (AFL)
 > a security-oriented fuzzer that employs a novel type of compile-time
 > instrumentation and genetic algorithms to automatically discover
