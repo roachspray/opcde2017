@@ -86,6 +86,13 @@ https://divine.fi.muni.cz
 
 [Thesis](https://is.muni.cz/th/373979/fi_m/thesis.pdf)
 
+
+### DomTreSat
+> static analysis system that takes source code as input and automatically produces path satisfiability reports for paths gathered from a created Dominator Tree structure...main use of this tool is determine reachability of controllable input to a target in the program, as well as what this input needs to be to get there
+
+[GitHub](https://github.com/trailofbits/DomTreSat)
+
+
 ### DynamicTools
 > This project consists of several useful tool for dealing with LLVM
 > IR runtime behaviors. Currently it consists of two parts,
@@ -219,6 +226,14 @@ Basically, it attempts to reorganize GetElementPtr's to best handle alpha partic
 ### Pointer analysis with tunable precision (TPA)
 [GitHub](https://github.com/grievejia/tpa)
 
+
+### RaceSan (ToB)
+> Data race detector using modified DataCollider algorithm. 
+
+WIP? 
+
+[GitHub](https://github.com/trailofbits/RaceSanitizer)
+
 ### Remill (ToB)
 > Lift MC instructions to IR
 
@@ -280,6 +295,14 @@ http://saw.galois.com/
 
 [GitHub llvm-verifier](https://github.com/GaloisInc/llvm-verifier)
 
+### Strong Update Analysis (SUPA) (UNSW)
+> demand-driven Strong UPdate Analysis that computes points-to information on-demand via value-flow refinement. 
+> built on SVF (below)
+
+http://www.cse.unsw.edu.au/~corg/supa/
+
+[GitHub](https://github.com/unsw-corg/PTABen)
+
 ### Static Value Flow (SVF) (UNSW)
 > Pointer Analysis and Program Dependence Analysis for C and C++ Programs
 
@@ -307,6 +330,12 @@ http://www.cl.cam.ac.uk/research/security/ctsrd/tesla
 http://www.cis.upenn.edu/~stevez/vellvm/
 
 https://deepspec.org/main
+
+### Verified ThreadSanitizer (TSan) 
+> Output research from VeLLVM / deepspec group on verifying TSan does what it says it will
+
+[GitHub](https://github.com/upenn-acg/verified-tsan)
+
 
 ### Whole program LLVM
 > Help linking multiple .bc files to one

@@ -28,6 +28,7 @@ using namespace llvm;
 void
 TargetCallSitesPass::getAnalysisUsage(AnalysisUsage &AU) const
 {
+	AU.setPreservesCFG();
 }
 
 void
