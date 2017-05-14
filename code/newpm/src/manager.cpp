@@ -6,6 +6,7 @@
  */
 
 #include "llvm/LinkAllPasses.h"
+#include "llvm/AsmParser/Parser.h"
 #include "llvm/IR/LLVMContext.h"
 #include "llvm/IR/PassManager.h"
 #include "llvm/Support/SourceMgr.h"
@@ -32,12 +33,22 @@ cl::opt<std::string> InputBitcodeFile(cl::Positional, cl::desc("<input.bc>"),
 cl::opt<std::string> OutputBitcodeFile(cl::Positional, cl::desc("<output.bc>"),
 				       cl::Required);
 
-cl::opt<bool> FunctionRecognition("function-recognition",cl::init(false));
+/*
+ * Utility for testing 
+ */
+std::unique_ptr<Module> parseIR(LLVMContext &Context, const char *IR) {
+  SMDiagnostic Err;
+  return parseAssemblyString(IR, Err, Context);
+}
 
 
 int main(int argc, char *argv[]) {
 
   std::error_code ec;
+  // Here we can explicitly manage analyses, not just a pass.
+  // in the grand scheme this saves us time (tends-to) as analysis
+  // passes don't transform the IR.  More importantly it allows us to 
+  // customize the analysis output!
   FunctionAnalysisManager FAM;
   SMDiagnostic err;
   std::unique_ptr<Module> irModule;
@@ -46,20 +57,26 @@ int main(int argc, char *argv[]) {
   cl::ParseCommandLineOptions( argc, argv );
 
   outs() << "Reading bitcode from file: " << InputBitcodeFile << '\n';
+
   irModule = parseIRFile( InputBitcodeFile, err, *unwrap(LLVMGetGlobalContext()));
   if ( irModule == nullptr ) {
     errs() << "Error: " << err.getMessage().str() << '\n';
     return -1;
   }
 
-  if ( FunctionRecognition ) {
-    int Runs = 0;
-    FAM.registerPass( [&] { return TestFunctionAnalysisPass(Runs); });
+  int Runs = 0;
+  FAM.registerPass( [&] { return TestFunctionAnalysisPass(Runs); });
+  
+  // since we want to run our function analysis per module, we use a module proxy
+  ModuleAnalysisManager MAM(true); // yes we want debugging
+  MAM.registerPass( [&] { return FunctionAnalysisManagerModuleProxy(FAM); } );
+  
+  // run our analysis through as a pass
+  ModulePassManager MPM(true);
+  MPM.run( *irModule.get(), MAM );
 
-  }
 
-  // je suis fine...
-   
+  // je suis fine...   
   return 0;
 
 }

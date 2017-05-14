@@ -70,7 +70,7 @@ $(PASS) : $(PASS_OBJECTS)
 	@echo "Linking $@"
 	$(QUIET)$(CPP) -o build/lib/$@ $(LOADABLE_MODULE_OPTIONS) $(CXXFLAGS) $(LDFLAGS) ${addprefix $(BOD)/,$^}
 
-test: testprep testnca testnsdl testpd testnfdl
+test: testprep testfe
 
 testprep:
 	$(QUIET)mkdir -p $(TDIR)
