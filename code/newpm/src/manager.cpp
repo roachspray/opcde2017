@@ -30,8 +30,6 @@ using namespace llvm;
  */
 cl::opt<std::string> InputBitcodeFile(cl::Positional, cl::desc("<input.bc>"),
 				      cl::Required);
-cl::opt<std::string> OutputBitcodeFile(cl::Positional, cl::desc("<output.bc>"),
-				       cl::Required);
 
 /*
  * Utility for testing 
@@ -49,10 +47,8 @@ int main(int argc, char *argv[]) {
   // in the grand scheme this saves us time (tends-to) as analysis
   // passes don't transform the IR.  More importantly it allows us to 
   // customize the analysis output!
-  FunctionAnalysisManager FAM;
   SMDiagnostic err;
   std::unique_ptr<Module> irModule;
-  raw_fd_ostream *outputStream;
 
   cl::ParseCommandLineOptions( argc, argv );
 
@@ -64,17 +60,29 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  int Runs = 0;
-  FAM.registerPass( [&] { return TestFunctionAnalysisPass(Runs); });
-  
-  // since we want to run our function analysis per module, we use a module proxy
-  ModuleAnalysisManager MAM(true); // yes we want debugging
-  MAM.registerPass( [&] { return FunctionAnalysisManagerModuleProxy(FAM); } );
+  int FunctionPassCount = 0;
+  int AnalyzedInstrCount = 0;
+  int AnalyzedFunctionCount = 0;
+
+  FunctionPassManager FPM( true );
+  FPM.addPass( TestFunctionPass(FunctionPassCount, AnalyzedInstrCount, AnalyzedFunctionCount,true) );
   
   // run our analysis through as a pass
   ModulePassManager MPM(true);
-  MPM.run( *irModule.get(), MAM );
+  MPM.addPass( createModuleToFunctionPassAdaptor(std::move(FPM)) );
 
+  // create a function analysis manager
+  FunctionAnalysisManager FAM(true);
+  int FunctionAnalysisRuns = 0;
+  FAM.registerPass([&] { return TestFunctionAnalysis(FunctionAnalysisRuns); } );
+
+  // create our module analysis manager and register the available passes
+  ModuleAnalysisManager MAM( true );
+  MAM.registerPass( [&] { return FunctionAnalysisManagerModuleProxy(FAM); });
+
+  MPM.run( *irModule.get(), MAM );
+  outs() << "Functions analyzed: " << AnalyzedFunctionCount << '\n';
+  outs() << "Instructions analyzed: " << AnalyzedInstrCount << '\n';
 
   // je suis fine...   
   return 0;
