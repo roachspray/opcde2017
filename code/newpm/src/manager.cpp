@@ -21,7 +21,7 @@
 
 using namespace llvm;
 
-#include "Analysis/TargetCallSitesPass.h"
+#include "Analysis/TestFunctionPass.h"
 
 /*
  * The only pass that is merged into this manager is ta simple function list utility

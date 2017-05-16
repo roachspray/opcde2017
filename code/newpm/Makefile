@@ -16,8 +16,10 @@ CPPFLAGS+=$(shell $(LLVM_CONFIG) --cppflags) -std=c++11 -I$(SRC_DIR)
 
 ifeq ($(shell uname),Darwin)
 LOADABLE_MODULE_OPTIONS=-bundle -undefined dynamic_lookup
+PASS=TestFunctionPass.dylib
 else
 LOADABLE_MODULE_OPTIONS=-shared -Wl,-O1
+PASS=TestFunctionPass.so
 endif
 
 # Change these to point to your installation of clang/llvm-d
@@ -28,8 +30,8 @@ CC=/usr/bin/clang
 BOD=build/obj
 PASSMGR=Manager
 OPM=build/bin/$(PASSMGR)
-PASS=ComminuteShared.dylib
-PASS_OBJECTS=Analysis/TargetCallSitesPass.o 
+
+PASS_OBJECTS=Analysis/TestFunctionPass.o 
 
 # XXX
 # This is awful... Im just like "PUT IT ALL IN"
