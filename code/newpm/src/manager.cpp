@@ -61,10 +61,20 @@ int main(int argc, char *argv[]) {
   }
 
 
+  /* 
+   * Our analysis is really about functions
+   * but to do that we'll want to bridge functions within modules
+   * so we'll start with the registration of a FunctionAnalysis class
+   */
   FunctionAnalysisManager FAM(/*DebugLogging*/ true);
   int FunctionAnalysisRuns = 0;
   FAM.registerPass([&] { return TestFunctionAnalysis(FunctionAnalysisRuns); });
 
+  /* 
+   * We're creating the ModuleAnaysisManager and we want to regisgter the various
+   * analysis pieces that are available.  This allows the "results" to be
+   * looked up (in the cache), to see if the analysis has already been done.
+   */
   ModuleAnalysisManager MAM(/*DebugLogging*/ true);
   int ModuleAnalysisRuns = 0;
   MAM.registerPass([&] { return TestModuleAnalysis(ModuleAnalysisRuns); });
@@ -76,13 +86,22 @@ int main(int argc, char *argv[]) {
   int FunctionPassRunCount = 0;
   int AnalyzedInstrCount = 0;
   int AnalyzedFunctionCount = 0;
-  
+
+  /*
+   * In this case we have a function pass that run within the module pass.
+   */
   FunctionPassManager FPM(true);
   FPM.addPass( TestFunctionPass( FunctionPassRunCount, 
 				 AnalyzedInstrCount,
 				 AnalyzedFunctionCount ) );
+
   MPM.addPass(createModuleToFunctionPassAdaptor(std::move(FPM)));
 
+  /* 
+   * Ultimately we run our passes on a module or IR.  The underlying unit at the pass
+   * level might be a function or mobile, etc, but we have a "Module" of IR and 
+   * therefore need a ModulePassManager to exercise our analysis.
+   */
   MPM.run( *irModule.get(), MAM );
 
   outs() << "Functions analyzed: " << FunctionAnalysisRuns << '\n';
