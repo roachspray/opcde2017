@@ -60,28 +60,32 @@ int main(int argc, char *argv[]) {
     return -1;
   }
 
-  int FunctionPassCount = 0;
+
+  FunctionAnalysisManager FAM(/*DebugLogging*/ true);
+  int FunctionAnalysisRuns = 0;
+  FAM.registerPass([&] { return TestFunctionAnalysis(FunctionAnalysisRuns); });
+
+  ModuleAnalysisManager MAM(/*DebugLogging*/ true);
+  int ModuleAnalysisRuns = 0;
+  MAM.registerPass([&] { return TestModuleAnalysis(ModuleAnalysisRuns); });
+  MAM.registerPass([&] { return FunctionAnalysisManagerModuleProxy(FAM); });
+  FAM.registerPass([&] { return ModuleAnalysisManagerFunctionProxy(MAM); });
+  ModulePassManager MPM;
+
+  // Count the runs over a Function.
+  int FunctionPassRunCount = 0;
   int AnalyzedInstrCount = 0;
   int AnalyzedFunctionCount = 0;
-
-  FunctionPassManager FPM( true );
-  FPM.addPass( TestFunctionPass(FunctionPassCount, AnalyzedInstrCount, AnalyzedFunctionCount,true) );
   
-  // run our analysis through as a pass
-  ModulePassManager MPM(true);
-  MPM.addPass( createModuleToFunctionPassAdaptor(std::move(FPM)) );
-
-  // create a function analysis manager
-  FunctionAnalysisManager FAM(true);
-  int FunctionAnalysisRuns = 0;
-  FAM.registerPass([&] { return TestFunctionAnalysis(FunctionAnalysisRuns); } );
-
-  // create our module analysis manager and register the available passes
-  ModuleAnalysisManager MAM( true );
-  MAM.registerPass( [&] { return FunctionAnalysisManagerModuleProxy(FAM); });
+  FunctionPassManager FPM(true);
+  FPM.addPass( TestFunctionPass( FunctionPassRunCount, 
+				 AnalyzedInstrCount,
+				 AnalyzedFunctionCount ) );
+  MPM.addPass(createModuleToFunctionPassAdaptor(std::move(FPM)));
 
   MPM.run( *irModule.get(), MAM );
-  outs() << "Functions analyzed: " << AnalyzedFunctionCount << '\n';
+
+  outs() << "Functions analyzed: " << FunctionAnalysisRuns << '\n';
   outs() << "Instructions analyzed: " << AnalyzedInstrCount << '\n';
 
   // je suis fine...   
