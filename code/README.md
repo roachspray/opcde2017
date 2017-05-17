@@ -6,6 +6,7 @@ Very basic example codes.
 - fpskel: FunctionPass skeleton
 - intflip: integer argument randomizer|bit-flipper
 - mpskel: ModulePass skeleton
+- newpm: Making use of the new pass manager API (req 4.0)
 - npassert: NULL pointer check insertion
 - rpskel: RegionPass skeleton
 - visitorskel: Using a InstVisitor class
